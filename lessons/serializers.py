@@ -5,7 +5,7 @@ from lessons.models import Course, Lesson
 
 class CourseSerializer(serializers.ModelSerializer):
 
-    lesson_counter = serializers.IntegerField(source='lesson_set.all.count')
+    lesson_counter = serializers.IntegerField(source='lesson_set.all.count', read_only=True)
 
     class Meta:
         model = Course
