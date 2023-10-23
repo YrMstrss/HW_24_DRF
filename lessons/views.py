@@ -9,6 +9,13 @@ class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
 
+    def get_permissions(self):
+        if self.action == 'update' or self.action == 'partial_update':
+            permission_classes = [IsManager]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
+
 
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
