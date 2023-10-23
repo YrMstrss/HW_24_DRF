@@ -1,6 +1,7 @@
 from rest_framework import viewsets, generics
 
 from lessons.models import Course, Lesson
+from lessons.permissions import IsManager
 from lessons.serializers import CourseSerializer, LessonSerializer
 
 
@@ -26,6 +27,7 @@ class LessonRetrieveAPIView(generics.RetrieveAPIView):
 class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
+    permission_classes = [IsManager]
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
