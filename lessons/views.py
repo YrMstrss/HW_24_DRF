@@ -12,6 +12,8 @@ class CourseViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'update' or self.action == 'partial_update':
             permission_classes = [IsManager]
+        elif self.action == 'delete' or self.action == 'create':
+            permission_classes = [IsSuperuser]
         else:
             permission_classes = []
         return [permission() for permission in permission_classes]
