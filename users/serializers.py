@@ -10,3 +10,16 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+
+
+class UserSerializerForOthers(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "date_joined",
+            "phone",
+            "city",
+            "avatar",
+            "email"
+        )
