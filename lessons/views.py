@@ -1,6 +1,7 @@
 from rest_framework import viewsets, generics
 
 from lessons.models import Course, Lesson, Subscription
+from lessons.paginators import LessonPaginator
 from lessons.permissions import IsManager, IsOwner, IsSubscriber, IsLessonSubscribed, IsCourseSubscribed
 from lessons.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 
@@ -8,6 +9,13 @@ from lessons.serializers import CourseSerializer, LessonSerializer, Subscription
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
+    pagination_class = LessonPaginator
+
+    def get(self, request, **kwargs):
+        queryset = Course.objects.all()
+        paginated_queryset = self.paginate_queryset(queryset)
+        serializer = CourseSerializer(paginated_queryset, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def get_permissions(self):
         if self.action == 'update' or self.action == 'partial_update' or self.action == 'retrieve':
@@ -38,6 +46,13 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
+    pagination_class = LessonPaginator
+
+    def get(self, request, **kwargs):
+        queryset = Lesson.objects.all()
+        paginated_queryset = self.paginate_queryset(queryset)
+        serializer = LessonSerializer(paginated_queryset, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def get_queryset(self):
         user = self.request.user
