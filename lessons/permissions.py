@@ -28,3 +28,12 @@ class IsLessonSubscribed(BasePermission):
         if subscription:
             return True
         return False
+
+
+class IsCourseSubscribed(BasePermission):
+    def has_permission(self, request, view):
+
+        subscription = Subscription.objects.filter(user=request.user, course=view.get_object())
+        if subscription:
+            return True
+        return False

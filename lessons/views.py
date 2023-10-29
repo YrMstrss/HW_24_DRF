@@ -1,7 +1,7 @@
 from rest_framework import viewsets, generics
 
 from lessons.models import Course, Lesson, Subscription
-from lessons.permissions import IsManager, IsOwner, IsSubscriber, IsLessonSubscribed
+from lessons.permissions import IsManager, IsOwner, IsSubscriber, IsLessonSubscribed, IsCourseSubscribed
 from lessons.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 
 
@@ -11,7 +11,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'update' or self.action == 'partial_update' or self.action == 'retrieve':
-            permission_classes = [IsManager, IsOwner]
+            permission_classes = [IsManager, IsOwner, IsCourseSubscribed]
         elif self.action == 'delete':
             permission_classes = [~IsManager, IsOwner]
         elif self.action == 'create':
