@@ -10,7 +10,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
 
     def get_permissions(self):
-        if self.action == 'update' or self.action == 'partial_update':
+        if self.action == 'update' or self.action == 'partial_update' or self.action == 'retrieve':
             permission_classes = [IsManager, IsOwner]
         elif self.action == 'delete':
             permission_classes = [~IsManager, IsOwner]
