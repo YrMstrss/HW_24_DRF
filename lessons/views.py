@@ -1,7 +1,7 @@
 from rest_framework import viewsets, generics
 
 from lessons.models import Course, Lesson
-from lessons.permissions import IsManager, IsOwner
+from lessons.permissions import IsManager, IsOwner, IsSubscriber
 from lessons.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 
 
@@ -71,3 +71,7 @@ class SubscriptionCreateAPIView(generics.CreateAPIView):
         subscription.user = self.request.user
         subscription.save()
 
+
+class SubscriptionDestroyAPIView(generics.DestroyAPIView):
+    serializer_class = SubscriptionSerializer
+    permission_classes = [IsSubscriber]
