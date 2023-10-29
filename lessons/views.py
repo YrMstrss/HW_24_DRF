@@ -41,9 +41,20 @@ class LessonListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
+
         if user.groups.filter(name='manager'):
             return Lesson.objects.all()
-        return Lesson.objects.filter(owner=user)
+
+        queryset = Lesson.objects.filter(owner=user)
+
+        subscriptions = Subscription.objects.filter(user=user)
+        if subscriptions:
+            for subscription in subscriptions:
+                course = subscription.course
+                lesson_set = Lesson.objects.filter(course=course)
+                queryset = set(queryset | lesson_set)
+
+        return queryset
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
