@@ -20,10 +20,20 @@ class CourseViewSet(viewsets.ModelViewSet):
             permission_classes = []
         return [permission() for permission in permission_classes]
 
+    def perform_create(self, serializer):
+        course = serializer.save()
+        course.owner = self.request.user
+        course.save()
+
 
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
     permission_classes = [~IsManager]
+
+    def perform_create(self, serializer):
+        lesson = serializer.save()
+        lesson.owner = self.request.user
+        lesson.save()
 
 
 class LessonListAPIView(generics.ListAPIView):
