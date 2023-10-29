@@ -12,3 +12,8 @@ class IsManager(BasePermission):
         if request.user.groups.filter(name='manager'):
             return True
         return False
+
+
+class IsSubscriber(BasePermission):
+    def has_permission(self, request, view):
+        return request.user == view.get_object().user
