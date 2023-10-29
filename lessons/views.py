@@ -1,7 +1,7 @@
 from rest_framework import viewsets, generics
 
 from lessons.models import Course, Lesson, Subscription
-from lessons.permissions import IsManager, IsOwner, IsSubscriber
+from lessons.permissions import IsManager, IsOwner, IsSubscriber, IsLessonSubscribed
 from lessons.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 
 
@@ -60,7 +60,7 @@ class LessonListAPIView(generics.ListAPIView):
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsManager, IsOwner]
+    permission_classes = [IsOwner, IsManager, IsLessonSubscribed]
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
