@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from lessons.models import Course, Lesson
+from lessons.models import Course, Lesson, Subscription
 from lessons.validators import VideoLinkValidator
 
 
@@ -18,4 +18,11 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
+        fields = '__all__'
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Subscription
         fields = '__all__'
