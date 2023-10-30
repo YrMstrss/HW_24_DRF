@@ -140,3 +140,26 @@ class LessonReadTestCase(APITestCase):
             }
         )
 
+    def test_read_single_lesson(self):
+        """Тест на чтение одного урока"""
+        responce = self.client.get(
+            reverse('lessons:view-lesson', args=[self.lesson_1.id]),
+        )
+
+        self.assertEqual(
+            responce.status_code,
+            status.HTTP_200_OK
+        )
+
+        self.assertEqual(
+            responce.json(),
+            {
+                "id": 1,
+                "title": "Test lesson 1 read",
+                "preview": None,
+                "description": "Test description 1 read",
+                "video_link": "https://www.youtube.com/test_1_read",
+                "course": 1,
+                "owner": 1
+            }
+        )
