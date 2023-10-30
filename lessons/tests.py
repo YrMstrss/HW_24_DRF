@@ -262,3 +262,52 @@ class LessonDeleteTestCase(APITestCase):
             response.status_code,
             status.HTTP_204_NO_CONTENT
         )
+
+
+class SubscriptionCreateTestCase(APITestCase):
+    def setUp(self) -> None:
+
+        self.client = APIClient()
+
+        self.user = User.objects.create(
+            email='ivan@ivanov.com',
+            first_name='Ivan',
+            last_name='Ivanov',
+            phone='88005553535',
+            city='Moscow'
+        )
+        self.user.set_password('Ivanov123')
+        self.user.save()
+
+        self.client.force_authenticate(user=self.user)
+
+        self.course = Course.objects.create(
+            title='Course test',
+            description='Course description'
+        )
+
+    def test_create_subscription(self):
+
+        data = {
+            'course': self.course.id
+        }
+
+        responce = self.client.post(
+            reverse('lessons:get-subscription'),
+            data=data
+        )
+
+        self.assertEqual(
+            responce.status_code,
+            status.HTTP_201_CREATED
+        )
+
+        self.assertEqual(
+            responce.json(),
+            {
+                "id": 1,
+                "user": 1,
+                "course": 1,
+                "is_active": True
+            }
+        )
