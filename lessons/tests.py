@@ -211,11 +211,50 @@ class LessonUpdateTestCase(APITestCase):
         """Тест для полного изменения урока"""
 
         response = self.client.put(
-            reverse('lessons:view-lesson', args=[self.lesson.id]),
+            reverse('lessons:edit-lesson', args=[self.lesson.id]),
             self.data
         )
 
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK
+        )
+
+
+class LessonDeleteTestCase(APITestCase):
+    """Тест кейс на чтение записи об уроках"""
+    def setUp(self) -> None:
+
+        self.client = APIClient()
+
+        self.user = User.objects.create(
+            email='ivan@ivanov.com',
+            first_name='Ivan',
+            last_name='Ivanov',
+            phone='88005553535',
+            city='Moscow'
+        )
+        self.user.set_password('Ivanov123')
+        self.user.save()
+
+        self.client.force_authenticate(user=self.user)
+
+        self.course = Course.objects.create(
+            title='Course test',
+            description='Course description'
+        )
+
+        self.lesson = Lesson.objects.create(
+            title='Test lesson delete',
+            description='Test description delete',
+            video_link='https://www.youtube.com/test_delete',
+            course=self.course,
+            owner=self.user
+        )
+
+
+    def test_delete_lesson(self):
+        response = self.client.put(
+            reverse('lessons:view-lesson', args=[self.lesson.id]),
+            self.data
         )
