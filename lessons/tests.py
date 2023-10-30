@@ -167,7 +167,7 @@ class LessonReadTestCase(APITestCase):
 
 
 class LessonUpdateTestCase(APITestCase):
-    """Тест кейс на чтение записи об уроках"""
+    """Тест кейс на изменение записи об уроках"""
     def setUp(self) -> None:
 
         self.client = APIClient()
@@ -222,7 +222,7 @@ class LessonUpdateTestCase(APITestCase):
 
 
 class LessonDeleteTestCase(APITestCase):
-    """Тест кейс на чтение записи об уроках"""
+    """Тест кейс на удаление записи об уроках"""
     def setUp(self) -> None:
 
         self.client = APIClient()
@@ -252,9 +252,13 @@ class LessonDeleteTestCase(APITestCase):
             owner=self.user
         )
 
-
     def test_delete_lesson(self):
-        response = self.client.put(
-            reverse('lessons:view-lesson', args=[self.lesson.id]),
-            self.data
+
+        response = self.client.delete(
+            reverse('lessons:delete-lesson', args=[self.lesson.id])
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT
         )
