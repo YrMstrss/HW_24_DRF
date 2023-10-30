@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
 from lessons.models import Course, Lesson
+from lessons.serializers import LessonSerializer
 from users.models import User
 
 
@@ -162,4 +163,59 @@ class LessonReadTestCase(APITestCase):
                 "course": 1,
                 "owner": 1
             }
+        )
+
+
+class LessonUpdateTestCase(APITestCase):
+    """Тест кейс на чтение записи об уроках"""
+    def setUp(self) -> None:
+
+        self.client = APIClient()
+
+        self.user = User.objects.create(
+            email='ivan@ivanov.com',
+            first_name='Ivan',
+            last_name='Ivanov',
+            phone='88005553535',
+            city='Moscow'
+        )
+        self.user.set_password('Ivanov123')
+        self.user.save()
+
+        self.client.force_authenticate(user=self.user)
+
+        self.course = Course.objects.create(
+            title='Course test',
+            description='Course description'
+        )
+
+        self.lesson = Lesson.objects.create(
+            title='Test lesson update',
+            description='Test description update',
+            video_link='https://www.youtube.com/test_update',
+            course=self.course,
+            owner=self.user
+        )
+
+        self.data = LessonSerializer(self.lesson).data
+        self.data.update({
+            'title': 'Test lesson UPDATE',
+            'description': 'Test description UPDATE',
+            'video_link': 'https://www.youtube.com/test_UPDATE',
+            'course': self.course.id,
+            'owner': self.user.id,
+            'preview': ''
+        })
+
+    def test_put_lesson(self):
+        """Тест для полного изменения урока"""
+
+        response = self.client.put(
+            reverse('lessons:view-lesson', args=[self.lesson.id]),
+            self.data
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK
         )
