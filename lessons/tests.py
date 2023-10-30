@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
-from lessons.models import Course, Lesson
+from lessons.models import Course, Lesson, Subscription
 from lessons.serializers import LessonSerializer
 from users.models import User
 
@@ -310,4 +310,43 @@ class SubscriptionCreateTestCase(APITestCase):
                 "course": 1,
                 "is_active": True
             }
+        )
+
+
+class SubscriptionDeleteTestCase(APITestCase):
+    def setUp(self) -> None:
+
+        self.client = APIClient()
+
+        self.user = User.objects.create(
+            email='ivan@ivanov.com',
+            first_name='Ivan',
+            last_name='Ivanov',
+            phone='88005553535',
+            city='Moscow'
+        )
+        self.user.set_password('Ivanov123')
+        self.user.save()
+
+        self.client.force_authenticate(user=self.user)
+
+        self.course = Course.objects.create(
+            title='Course test',
+            description='Course description'
+        )
+
+        self.subscription = Subscription.objects.create(
+            course=self.course,
+            user=self.user
+        )
+
+    def test_delete_lesson(self):
+
+        response = self.client.delete(
+            reverse('lessons:delete-subscription', args=[self.subscription.id])
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT
         )
