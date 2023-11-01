@@ -340,7 +340,7 @@ class SubscriptionDeleteTestCase(APITestCase):
             user=self.user
         )
 
-    def test_delete_lesson(self):
+    def test_delete_subscription(self):
 
         response = self.client.delete(
             reverse('lessons:delete-subscription', args=[self.subscription.id])
