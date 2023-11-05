@@ -1,10 +1,9 @@
-from django.urls import reverse_lazy
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
 from users.models import User
 from users.permissions import IsCurrentUser
-from users.serializers import UserSerializer, UserSerializerForOthers
+from users.serializers import UserSerializer, UserSerializerForOthers, UserRegisterSerializer
 
 
 class UserRetrieveAPIView(generics.RetrieveAPIView):
@@ -24,7 +23,5 @@ class UserUpdateAPIView(generics.UpdateAPIView):
 
 
 class RegisterView(generics.CreateAPIView):
-    serializer_class = UserSerializer
+    serializer_class = UserRegisterSerializer
     permission_classes = [AllowAny]
-    model = User
-    success_url = reverse_lazy('users:login')
