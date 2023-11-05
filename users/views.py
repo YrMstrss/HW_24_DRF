@@ -1,3 +1,4 @@
+from django.urls import reverse_lazy
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
@@ -22,6 +23,8 @@ class UserUpdateAPIView(generics.UpdateAPIView):
     permission_classes = [IsCurrentUser]
 
 
-class UserCreateAPIView(generics.CreateAPIView):
+class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
+    model = User
+    success_url = reverse_lazy('users:login')
