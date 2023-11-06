@@ -120,21 +120,21 @@ class LessonReadTestCase(APITestCase):
                 "previous": None,
                 "results": [
                     {
-                        "id": 1,
+                        "id": 3,
                         "title": "Test lesson 1 read",
                         "preview": None,
                         "description": "Test description 1 read",
                         "video_link": "https://www.youtube.com/test_1_read",
-                        "course": 1,
-                        "owner": 1
+                        "course": 3,
+                        "owner": 3
                     },
                     {
-                        "id": 2,
+                        "id": 4,
                         "title": "Test lesson 2 read",
                         "preview": None,
                         "description": "Test description 2 read",
                         "video_link": "https://www.youtube.com/test_2_read",
-                        "course": 1,
+                        "course": 3,
                         "owner": None
                     }
                 ]
@@ -155,13 +155,13 @@ class LessonReadTestCase(APITestCase):
         self.assertEqual(
             responce.json(),
             {
-                "id": 1,
+                "id": 5,
                 "title": "Test lesson 1 read",
                 "preview": None,
                 "description": "Test description 1 read",
                 "video_link": "https://www.youtube.com/test_1_read",
-                "course": 1,
-                "owner": 1
+                "course": 4,
+                "owner": 4
             }
         )
 
@@ -289,7 +289,8 @@ class SubscriptionCreateTestCase(APITestCase):
     def test_create_subscription(self):
 
         data = {
-            'course': self.course.id
+            'course': self.course.id,
+            'is_active': True
         }
 
         responce = self.client.post(
@@ -306,8 +307,8 @@ class SubscriptionCreateTestCase(APITestCase):
             responce.json(),
             {
                 "id": 1,
-                "user": 1,
-                "course": 1,
+                "user": 6,
+                "course": 6,
                 "is_active": True
             }
         )
