@@ -1,3 +1,4 @@
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
 from payments.serializers import PaymentSerializer
@@ -26,11 +27,13 @@ class UserSerializerForOthers(serializers.ModelSerializer):
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, validators=[validate_password])
 
     def create(self, validated_data):
+        # validated_data['username'] = 'test'
         user = User.objects.create_user(**validated_data)
         return user
 
     class Meta:
         model = User
-        fields = ('email', 'password1', 'password2')
+        fields = ('email', 'password')
