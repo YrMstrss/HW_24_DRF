@@ -39,11 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'django_filters',
+    'rest_framework_simplejwt',
+    'drf_yasg',
+
     'users',
     'lessons',
     'payments',
-    'django_filters',
-    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
