@@ -1,8 +1,11 @@
+from datetime import datetime, timedelta
+
 from celery import shared_task
 from django.conf import settings
 from django.core.mail import send_mail
 
 from lessons.models import Lesson, Subscription, Course
+from users.models import User
 
 
 @shared_task
@@ -40,3 +43,15 @@ def send_message(pk, obj: str, method: str):
                 recipient_list=users,
                 fail_silently=False
             )
+
+
+def check_user_activity():
+    users = User.objects.filter(last_login__lt=datetime.now() - timedelta(days=30))
+    for user in users:
+        users.is_active = False
+        user.save()
+    users = User.objects.filter(last_login=None)
+    for user in users:
+        if user.date_joined < datetime.now() - timedelta(days=30):
+            users.is_active = False
+            user.save()
