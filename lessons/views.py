@@ -4,6 +4,7 @@ from lessons.models import Course, Lesson, Subscription
 from lessons.paginators import LessonPaginator
 from lessons.permissions import IsManager, IsOwner, IsSubscriber, IsLessonSubscribed, IsCourseSubscribed
 from lessons.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
+from lessons.tasks import send_message
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -33,6 +34,10 @@ class CourseViewSet(viewsets.ModelViewSet):
         course.owner = self.request.user
         course.save()
 
+    def perform_update(self, serializer):
+        course = serializer.save()
+        send_message.delay(course.pk, 'course', 'update')
+
 
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
@@ -42,6 +47,8 @@ class LessonCreateAPIView(generics.CreateAPIView):
         lesson = serializer.save()
         lesson.owner = self.request.user
         lesson.save()
+
+        send_message.delay(lesson.pk, 'lesson', 'create')
 
 
 class LessonListAPIView(generics.ListAPIView):
@@ -82,6 +89,10 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsManager | IsOwner]
+
+    def perform_update(self, serializer):
+        lesson = serializer.save()
+        send_message.delay(lesson.pk, 'lesson', 'update')
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
